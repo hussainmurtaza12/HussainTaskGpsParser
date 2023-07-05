@@ -5,7 +5,7 @@ unsigned char nmea_checksum(const char *sentence)
     unsigned char checksum = 0;
     if (*sentence == '$') sentence++;
     while (*sentence && *sentence != '*') {
-        checksum ^= *sentence++;
+        checksum ^= *sentence++; // XOR each character of the sentence
     }
     return checksum;
 }
@@ -16,12 +16,14 @@ int parse_data(const char* nmea_seq, GpsData *Gps_data)
         printf("Empty NMEA sentence.\n");
         return -1;
     }
+    // Calculate the checksum and compare it with the checksum in the NMEA sentence
      unsigned char calculated_checksum = nmea_checksum(nmea_seq);
     char *star = strrchr(nmea_seq, '*');
     if (star == NULL || strlen(star) != 3 || strtol(star + 1, NULL, 16) != calculated_checksum) {
         printf("Invalid NMEA checksum.\n");
         return -1;
     }
+    // Tokenize the NMEA sentence
     char *token = strtok(nmea_seq,",");
     int check=0;
   
