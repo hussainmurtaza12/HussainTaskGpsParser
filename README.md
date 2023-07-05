@@ -1,32 +1,47 @@
-# _Sample project_
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+# GPS Data Parser
 
-This is the simplest buildable example. The example is used by command `idf.py create-project`
-that copies the project to user specified path and set it's name. For more information follow the [docs page](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html#start-a-new-project)
+This project demonstrates a simple GPS data parser implemented in C language. The parser is designed to extract information from NMEA sentences, a common format for GPS data. The parsed data includes time, latitude, longitude, altitude, fix quality, number of satellites, horizontal dilution of position, and height of geoid.
 
 
+## Prerequisites
+Before using the GPS data parser, ensure that you have the following:
 
-## How to use example
-We encourage the users to use the example as a template for the new projects.
-A recommended way is to follow the instructions on a [docs page](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html#start-a-new-project).
+- ESP-IDF v5.0 or later
+- C compiler (e.g., GCC)
+- Standard C library
+- `stdio.h`, `stdlib.h`, and `string.h` header files
+## Usage
+Follow the steps below to use the GPS data parser in your ESP-IDF project:
 
-## Example folder contents
+1. Create a new component in your ESP-IDF project for the GPS data parser. You can name it `myLibrary` or any other suitable name.
 
-The project **sample_project** contains one source file in C language [main.c](main/main.c). The file is located in folder [main](main).
+2. Copy the following files into the component's directory:
+   - `components/myLibrary/imp.c`
+   - `components/myLibrary/my_library.h`
 
-ESP-IDF projects are built using CMake. The project build configuration is contained in `CMakeLists.txt`
-files that provide set of directives and instructions describing the project's source files and targets
-(executable, library, or both). 
+3. Include the `my_library.h` header file in your source file.
+4. Call the `parse_data` function, passing an NMEA sentence and a `GpsData` structure as arguments.
 
-Below is short explanation of remaining files in the project folder.
+   ```c
+   #include "my_library.h"
 
-```
-├── CMakeLists.txt
-├── main
-│   ├── CMakeLists.txt
-│   └── main.c
-└── README.md                  This is the file you are currently reading
-```
-Additionally, the sample project contains Makefile and component.mk files, used for the legacy Make based build system. 
-They are not used or needed when building with CMake and idf.py.
+   const char nmea_sentence[] = "$GPGGA,002153.000,3342.6618,N,11751.3858,W,1,10,1.2,27.0,M,-34.2,M,,0000*5E";
+   GpsData gps_data;
+
+   if (parse_data(nmea_sentence, &gps_data) == 0) {
+       // Use the parsed GPS data as needed
+   } else {
+       printf("Failed to parse NMEA sentence.\n");
+   }
+5. Access the individual fields of the GpsData structure to retrieve the parsed GPS data.
+
+6. Build and run your ESP-IDF project, ensuring that the necessary dependencies and libraries are properly linked.
+## File Structure
+The project consists of the following files:
+
+main/main.c: Contains the example usage of the GPS data parser.
+
+components/myLibrary/imp.c: Implements the GPS data parsing functions.
+
+components/myLibrary/my_library.h: Defines the GpsData structure and function prototypes.
